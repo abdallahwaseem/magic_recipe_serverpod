@@ -35,6 +35,8 @@ class RecipesEndpoint extends Endpoint {
         date: DateTime.now(),
         ingredients: ingredients);
 
-    return recipe;
+    final recipeWithId = await Recipe.db.insertRow(session, recipe);
+
+    return recipeWithId;
   }
 }
