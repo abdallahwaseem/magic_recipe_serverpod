@@ -1,8 +1,9 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:magic_recipe_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
 
 class RecipesEndpoint extends Endpoint {
-  Future<String> generateRecipe(Session session, String ingredients) async {
+  Future<Recipe> generateRecipe(Session session, String ingredients) async {
     // Serverpod automatically loads your passwords.yaml file and makes the passwords available
     // in the session.passwords map.
     final geminiApiKey = session.passwords['gemini'];
@@ -28,7 +29,12 @@ class RecipesEndpoint extends Endpoint {
     if (responseText == null || responseText.isEmpty) {
       throw Exception('No response from Gemini API');
     }
+    Recipe recipe = Recipe(
+        author: 'Gemini',
+        text: responseText,
+        date: DateTime.now(),
+        ingredients: ingredients);
 
-    return responseText;
+    return recipe;
   }
 }
