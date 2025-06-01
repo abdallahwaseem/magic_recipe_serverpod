@@ -1,4 +1,4 @@
-import 'package:magic_recipe_server/src/receipes/recipes_endpoint.dart';
+import 'package:magic_recipe_server/src/recipes/recipes_endpoint.dart';
 import 'package:test/test.dart';
 
 import 'test_tools/serverpod_test_tools.dart';
