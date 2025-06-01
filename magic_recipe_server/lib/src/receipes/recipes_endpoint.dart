@@ -39,4 +39,10 @@ class RecipesEndpoint extends Endpoint {
 
     return recipeWithId;
   }
+
+  Future<List<Recipe>> getRecipes(Session session) async {
+    final recipes = await Recipe.db
+        .find(session, orderBy: (row) => row.date, orderDescending: true);
+    return recipes;
+  }
 }
