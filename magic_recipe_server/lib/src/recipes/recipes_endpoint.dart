@@ -57,6 +57,6 @@ class RecipesEndpoint extends Endpoint {
       throw Exception('Recipe not found');
     }
     recipe.deletedAt = DateTime.now();
-    await Recipe.db.deleteRow(session, recipe);
+    await Recipe.db.updateRow(session, recipe);
   }
 }
