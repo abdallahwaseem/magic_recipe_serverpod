@@ -15,7 +15,7 @@ import 'package:serverpod_test/serverpod_test.dart' as _i1;
 import 'package:serverpod/serverpod.dart' as _i2;
 import 'dart:async' as _i3;
 import 'package:magic_recipe_server/src/generated/greeting.dart' as _i4;
-import 'package:magic_recipe_server/src/generated/receipes/recipe.dart' as _i5;
+import 'package:magic_recipe_server/src/generated/recipes/recipe.dart' as _i5;
 import 'package:magic_recipe_server/src/generated/protocol.dart';
 import 'package:magic_recipe_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';

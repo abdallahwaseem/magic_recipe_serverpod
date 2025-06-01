@@ -11,10 +11,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'greeting.dart' as _i2;
-import 'receipes/recipe.dart' as _i3;
-import 'package:magic_recipe_client/src/protocol/receipes/recipe.dart' as _i4;
+import 'recipes/recipe.dart' as _i3;
+import 'package:magic_recipe_client/src/protocol/recipes/recipe.dart' as _i4;
 export 'greeting.dart';
-export 'receipes/recipe.dart';
+export 'recipes/recipe.dart';
 export 'client.dart';
 
 class Protocol extends _i1.SerializationManager {

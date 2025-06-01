@@ -12,10 +12,10 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'package:serverpod/protocol.dart' as _i2;
 import 'greeting.dart' as _i3;
-import 'receipes/recipe.dart' as _i4;
-import 'package:magic_recipe_server/src/generated/receipes/recipe.dart' as _i5;
+import 'recipes/recipe.dart' as _i4;
+import 'package:magic_recipe_server/src/generated/recipes/recipe.dart' as _i5;
 export 'greeting.dart';
-export 'receipes/recipe.dart';
+export 'recipes/recipe.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();

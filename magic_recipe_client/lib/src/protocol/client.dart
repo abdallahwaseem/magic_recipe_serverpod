@@ -12,7 +12,7 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
 import 'package:magic_recipe_client/src/protocol/greeting.dart' as _i3;
-import 'package:magic_recipe_client/src/protocol/receipes/recipe.dart' as _i4;
+import 'package:magic_recipe_client/src/protocol/recipes/recipe.dart' as _i4;
 import 'protocol.dart' as _i5;
 
 /// This is an example endpoint that returns a greeting message through its [hello] method.
