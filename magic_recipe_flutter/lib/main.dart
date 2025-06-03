@@ -1,8 +1,10 @@
-import 'package:magic_recipe_client/magic_recipe_client.dart';
 import 'package:flutter/material.dart';
+import 'package:magic_recipe_client/magic_recipe_client.dart';
 import 'package:serverpod_auth_email_flutter/serverpod_auth_email_flutter.dart';
 import 'package:serverpod_auth_shared_flutter/serverpod_auth_shared_flutter.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
+
+import 'admin_dashboard.dart';
 
 /// Sets up a global client object that can be used to talk to the server from
 /// anywhere in our app. The client is generated from your server code
@@ -150,6 +152,22 @@ class MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
+          // Show nav button if we are admin
+          if (sessionManager.signedInUser?.scopeNames
+                  .contains('serverpod.admin') ??
+              false) ...[
+            IconButton(
+                icon: const Icon(Icons.admin_panel_settings),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AdminDashboard(),
+                    ),
+                  );
+                }),
+          ],
+
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
