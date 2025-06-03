@@ -35,6 +35,16 @@ void run(List<String> args) async {
       print('Validation code: $validationCode');
       return true;
     },
+    onUserCreated: (session, userInfo) async {
+      if (userInfo.email?.endsWith('serverpod.dev') ?? false) {
+        // Add admin scope for certain users
+        await auth.Users.updateUserScopes(session, userInfo.id!, {Scope.admin});
+        session.log(
+          'User ${userInfo.email} created with admin scope',
+          level: LogLevel.info,
+        );
+      }
+    },
   ));
 
   // Setup a default page at the web root.
