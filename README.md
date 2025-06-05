@@ -33,6 +33,28 @@ Through building this project, I gained hands-on experience with:
 - **Multi-input Support**: Accept ingredients via text input or image upload
 - **Responsive Design**: Optimized for web browsers
 
+## Screenshots
+
+### First screen
+
+<img src="./readme_assets/first.png" alt="First screen" width="60%"/>
+
+### Login
+
+<img src="./readme_assets/login.png" alt="Login" width="60%"/>
+
+### Register
+
+<img src="./readme_assets/register.png" alt="Register" width="60%"/>
+
+### Example recipes
+
+<img src="./readme_assets/example_recipes.png" alt="Example recipes" width="60%"/>
+
+### Admin dashboard
+
+<img src="./readme_assets/admin_dashboard.png" alt="Admin Dashboard" width="60%"/>
+
 ## Technologies Used
 
 ### Core Framework
