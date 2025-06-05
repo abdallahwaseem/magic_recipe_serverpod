@@ -5,17 +5,20 @@ import 'package:serverpod/serverpod.dart';
 
 @visibleForTesting
 var generateContent =
-    (String apiKey, String prompt) async => (await GenerativeModel(
+    (String apiKey, List<Content> prompt) async => (await GenerativeModel(
           model: 'gemini-1.5-flash-latest',
           apiKey: apiKey,
-        ).generateContent([Content.text(prompt)]))
+        ).generateContent(prompt))
             .text;
 
 class RecipesEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 
-  Future<Recipe> generateRecipe(Session session, String ingredients) async {
+  Future<Recipe> generateRecipe(Session session, String ingredients,
+      [String? imagePath]) async {
+    session.log(
+        'Ingredients Length: ${ingredients.length}, Image Path: $imagePath');
     // Serverpod automatically loads your passwords.yaml file and makes the passwords available
     // in the session.passwords map.
     final geminiApiKey = session.passwords['gemini'];
@@ -23,7 +26,7 @@ class RecipesEndpoint extends Endpoint {
       throw Exception('Gemini API key not found');
     }
 
-    final cacheKey = 'recipe-${ingredients.hashCode}';
+    final cacheKey = 'recipe-${ingredients.hashCode}-$imagePath';
     final cachedRecipe = await session.caches.local.get<Recipe>(cacheKey);
 
     if (cachedRecipe != null) {
@@ -34,11 +37,31 @@ class RecipesEndpoint extends Endpoint {
       return cachedRecipeWithId;
     }
 
+    final List<Content> prompt = [];
+
+    if (imagePath != null) {
+      final imageData = await session.storage
+          .retrieveFile(storageId: 'public', path: imagePath);
+      if (imageData == null) {
+        throw Exception('Image not found');
+      }
+      prompt.add(Content.data('image/jpeg', imageData.buffer.asUint8List()));
+      prompt.add(Content.text('''
+        Generate a recipe using the detected ingeredients. Always put the title
+        of the recipe in the first line, and then the instructions. The recipe
+        should be easy to follow and include all necessary steps. Please provide
+        a detailed recipe. Only put the title in the first line, no markup.'''));
+    }
+
     // A prompt to generate a recipe, the user will provide a free text input with the ingredients
-    final prompt =
+    final textPrompt =
         'Generate a recipe using the following ingredients: $ingredients, always put the title '
         'of the recipe in the first line, and then the instructions. The recipe should be easy '
         'to follow and include all necessary steps. Please provide a detailed recipe.';
+
+    if (prompt.isEmpty) {
+      prompt.add(Content.text(textPrompt));
+    }
 
     final responseText = await generateContent(geminiApiKey, prompt);
 
@@ -53,7 +76,9 @@ class RecipesEndpoint extends Endpoint {
       text: responseText,
       date: DateTime.now(),
       ingredients: ingredients,
+      imagePath: imagePath,
     );
+
     await session.caches.local
         .put(cacheKey, recipe, lifetime: const Duration(days: 1));
 
@@ -80,5 +105,36 @@ class RecipesEndpoint extends Endpoint {
     }
     recipe.deletedAt = DateTime.now();
     await Recipe.db.updateRow(session, recipe);
+  }
+
+  Future<(String? description, String path)> getUploadDescription(
+      Session session, String filename) async {
+    const Uuid uuid = Uuid();
+
+    // Generate a unique path for the file
+    // Using a uuid prevents collisions and enumeration attacks
+    final path = 'uploads/${uuid.v4()}/$filename';
+
+    final description = await session.storage.createDirectFileUploadDescription(
+      storageId: 'public',
+      path: path,
+    );
+
+    return (description, path);
+  }
+
+  Future<bool> verifyUpload(Session session, String path) async {
+    return await session.storage.verifyDirectFileUpload(
+      storageId: 'public',
+      path: path,
+    );
+  }
+
+  Future<String> getPublicUrlForPath(Session session, String path) async {
+    final publicUrl =
+        await session.storage.getPublicUrl(storageId: 'public', path: path);
+
+    session.log('Public URL:\n$publicUrl');
+    return publicUrl.toString();
   }
 }
